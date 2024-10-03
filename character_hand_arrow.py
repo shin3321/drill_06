@@ -22,20 +22,24 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             running = False
 
+def draw_character():
+    character.clip_draw(frame * 100, 100 * 1, 100, 100, x, y)
+def composite_draw():
+    character.clip_composite_draw(frame * 100, 100 * 1, 100, 100, 0, 'h', x, y, 100, 100)
+
 def random_hand():
     global hx, hy
-    if hx == x and hy == y:
-        hx, hy = random.randrange(TUK_WIDTH),random.randrange(TUK_HEIGHT)
+    if abs(hx - x) < 5 and abs(hy - y) < 5:
+        hx, hy = random.randrange(TUK_WIDTH), random.randrange(TUK_HEIGHT)
 
 def follow_arrow(hx, hy):
     global x, y
-    if x != hx and y != hy:
-        for i in range(0, 100 +1, 1):
-            t = i/100
-            x = (1-t) * x + t * hx
-            y = (1-t) * y + t * hy
-            break
-        pass
+    speed = 0.01
+    for i in range(0, 100 +1, 4):
+        t = i/100
+        x = (1-t*speed) * x + (t*speed) * hx
+        y = (1-t*speed) * y + (t*speed) * hy
+
 
 running = True
 frame = 0
@@ -44,15 +48,22 @@ hx, hy = random.randrange(TUK_WIDTH), random.randrange(TUK_HEIGHT)
 hide_cursor()
 
 
+
+
 while running:
     clear_canvas()
 
     tuk_ground.draw(TUK_WIDTH // 2, TUK_HEIGHT // 2)
-    character.clip_draw(frame * 100, 100 * 1, 100, 100, x, y)
+    if (hx - x > 0):
+        draw_character()
+    else:
+        composite_draw()
     arrow.draw(hx, hy)
     update_canvas()
+
     random_hand()
     follow_arrow(hx, hy)
+
     handle_events()
     frame = (frame + 1) % 8
     delay(0.05)
