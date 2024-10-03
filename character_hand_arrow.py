@@ -34,6 +34,7 @@ def follow_arrow(hx, hy):
             t = i/100
             x = (1-t) * x + t * hx
             y = (1-t) * y + t * hy
+            break
         pass
 
 running = True
@@ -41,8 +42,6 @@ frame = 0
 x, y = TUK_WIDTH // 2, TUK_HEIGHT // 2
 hx, hy = random.randrange(TUK_WIDTH), random.randrange(TUK_HEIGHT)
 hide_cursor()
-
-
 
 
 while running:
